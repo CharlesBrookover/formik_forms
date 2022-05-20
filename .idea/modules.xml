@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/formik_forms.iml" filepath="$PROJECT_DIR$/.idea/formik_forms.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../guildwars2/.idea/guildwars2.iml" filepath="$PROJECT_DIR$/../../guildwars2/.idea/guildwars2.iml" />
     </modules>
   </component>
 </project>

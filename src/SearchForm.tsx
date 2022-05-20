@@ -1,6 +1,8 @@
 import React from 'react';
 import {ErrorMessage, Field, Form, Formik, FormikHelpers} from 'formik';
 import * as yup from 'yup';
+import useData from "./useData";
+import _ from 'lodash';
 
 interface formValues {
     name: string,
@@ -24,126 +26,145 @@ const SearchForm = () => {
         quality: yup.array().of(yup.string()).ensure()
     });
 
+    const {data, loading, setSearchId} = useData();
+
     return (
-        <Formik
-            initialValues={{name: '', levelLow: 0, levelHigh: 80, races: [], professions: [], type: [], quality: []}}
-            validationSchema={schema}
-            onSubmit={(values: formValues, actions: FormikHelpers<any>) => {
-                setTimeout(() => {
-                    console.log(JSON.stringify(values));
-                    actions.setSubmitting(false);
-                }, 1000);
-            }}>
-            <Form>
-                <label htmlFor="name">Item Name</label>
-                <Field name="name" placeholder="Enter item name"/>
-                <ErrorMessage name="name" />
+        <>
+            <Formik
+                initialValues={{
+                    name: '',
+                    levelLow: 0,
+                    levelHigh: 80,
+                    races: [],
+                    professions: [],
+                    type: [],
+                    quality: []
+                }}
+                validationSchema={schema}
+                onSubmit={(values: formValues, actions: FormikHelpers<any>) => {
+                    setTimeout(() => {
+                        console.log(JSON.stringify(values));
+                        actions.setSubmitting(false);
+                    }, 1000);
 
-                <fieldset>
-                    <legend>Levels</legend>
-                    <Field name="levelLow" type="number" min="0" max="80"/>
-                    <Field name="levelHigh" type="number" min="0" max="80"/>
+                    setSearchId(15666);
+                }}>
+                {({isSubmitting}) => <Form>
+                    <label htmlFor="name">Item Name</label>
+                    <Field name="name" placeholder="Enter item name"/>
+                    <ErrorMessage name="name"/>
 
-                    <ErrorMessage name="levelLow" />
-                    <ErrorMessage name="levelHigh" />
-                </fieldset>
+                    <fieldset>
+                        <legend>Levels</legend>
+                        <Field name="levelLow" type="number" min="0" max="80"/>
+                        <Field name="levelHigh" type="number" min="0" max="80"/>
 
-                <fieldset>
-                    <legend>Races</legend>
-                    <label>
-                        <Field type="checkbox" name="races" value="asura"/>
-                        Asura
-                    </label>
-                    <label>
-                        <Field type="checkbox" name="races" value="human"/>
-                        Human
-                    </label>
-                    <label>
-                        <Field type="checkbox" name="races" value="charr"/>
-                        Charr
-                    </label>
-                    <label>
-                        <Field type="checkbox" name="races" value="norn"/>
-                        Norn
-                    </label>
-                    <ErrorMessage name="races" />
-                </fieldset>
+                        <ErrorMessage name="levelLow"/>
+                        <ErrorMessage name="levelHigh"/>
+                    </fieldset>
 
-                <fieldset>
-                    <legend>Professions</legend>
-                    <label>
-                        <Field type="checkbox" name="professions" value="thief"/>
-                        Thief
-                    </label>
-                    <label>
-                        <Field type="checkbox" name="professions" value="warrior"/>
-                        Warrior
-                    </label>
-                    <label>
-                        <Field type="checkbox" name="professions" value="mesmer"/>
-                        Mesmer
-                    </label>
-                    <label>
-                        <Field type="checkbox" name="professions" value="ranger"/>
-                        Ranger
-                    </label>
-                    <ErrorMessage name="professions" />
-                </fieldset>
+                    <fieldset>
+                        <legend>Races</legend>
+                        <label>
+                            <Field type="checkbox" name="races" value="asura"/>
+                            Asura
+                        </label>
+                        <label>
+                            <Field type="checkbox" name="races" value="human"/>
+                            Human
+                        </label>
+                        <label>
+                            <Field type="checkbox" name="races" value="charr"/>
+                            Charr
+                        </label>
+                        <label>
+                            <Field type="checkbox" name="races" value="norn"/>
+                            Norn
+                        </label>
+                        <ErrorMessage name="races"/>
+                    </fieldset>
 
-                <fieldset>
-                    <legend>Item Type</legend>
-                    <label>
-                        <Field type="checkbox" name="type" value="weapon"/>
-                        Weapon
-                    </label>
-                    <label>
-                        <Field type="checkbox" name="type" value="armor"/>
-                        Armor
-                    </label>
-                    <label>
-                        <Field type="checkbox" name="type" value="trinket"/>
-                        Trinket
-                    </label>
-                    <label>
-                        <Field type="checkbox" name="type" value="gizmo"/>
-                        Gizmo
-                    </label>
-                    <label>
-                        <Field type="checkbox" name="type" value="consumable"/>
-                        Consumable
-                    </label>
-                    <ErrorMessage name="type" />
-                </fieldset>
+                    <fieldset>
+                        <legend>Professions</legend>
+                        <label>
+                            <Field type="checkbox" name="professions" value="thief"/>
+                            Thief
+                        </label>
+                        <label>
+                            <Field type="checkbox" name="professions" value="warrior"/>
+                            Warrior
+                        </label>
+                        <label>
+                            <Field type="checkbox" name="professions" value="mesmer"/>
+                            Mesmer
+                        </label>
+                        <label>
+                            <Field type="checkbox" name="professions" value="ranger"/>
+                            Ranger
+                        </label>
+                        <ErrorMessage name="professions"/>
+                    </fieldset>
 
-                <fieldset>
-                    <legend>Quality</legend>
-                    <label>
-                        <Field type="checkbox" name="quality" value="fine"/>
-                        Fine
-                    </label>
-                    <label>
-                        <Field type="checkbox" name="quality" value="master"/>
-                        Master
-                    </label>
-                    <label>
-                        <Field type="checkbox" name="quality" value="exotic"/>
-                        Exotic
-                    </label>
-                    <label>
-                        <Field type="checkbox" name="quality" value="ascended"/>
-                        Ascended
-                    </label>
-                    <label>
-                        <Field type="checkbox" name="quality" value="legendary"/>
-                        Legendary
-                    </label>
-                    <ErrorMessage name="quality" />
-                </fieldset>
+                    <fieldset>
+                        <legend>Item Type</legend>
+                        <label>
+                            <Field type="checkbox" name="type" value="weapon"/>
+                            Weapon
+                        </label>
+                        <label>
+                            <Field type="checkbox" name="type" value="armor"/>
+                            Armor
+                        </label>
+                        <label>
+                            <Field type="checkbox" name="type" value="trinket"/>
+                            Trinket
+                        </label>
+                        <label>
+                            <Field type="checkbox" name="type" value="gizmo"/>
+                            Gizmo
+                        </label>
+                        <label>
+                            <Field type="checkbox" name="type" value="consumable"/>
+                            Consumable
+                        </label>
+                        <ErrorMessage name="type"/>
+                    </fieldset>
 
-                <button type="submit">Submit</button>
-            </Form>
+                    <fieldset>
+                        <legend>Quality</legend>
+                        <label>
+                            <Field type="checkbox" name="quality" value="fine"/>
+                            Fine
+                        </label>
+                        <label>
+                            <Field type="checkbox" name="quality" value="master"/>
+                            Master
+                        </label>
+                        <label>
+                            <Field type="checkbox" name="quality" value="exotic"/>
+                            Exotic
+                        </label>
+                        <label>
+                            <Field type="checkbox" name="quality" value="ascended"/>
+                            Ascended
+                        </label>
+                        <label>
+                            <Field type="checkbox" name="quality" value="legendary"/>
+                            Legendary
+                        </label>
+                        <ErrorMessage name="quality"/>
+                    </fieldset>
 
-        </Formik>
+                    <button type="submit" disabled={isSubmitting}>Submit</button>
+                </Form>}
+
+            </Formik>
+            <div style={{marginTop: '2rem'}}>
+                {loading && <div>Loading....</div>}
+                {!loading && !_.isEmpty(data) && JSON.stringify(data, null, 2)}
+            </div>
+        </>
+
     );
 };
 

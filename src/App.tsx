@@ -6,7 +6,10 @@ function App() {
     return (
         <div className="App">
             <section>
-                <SearchForm/>
+                <SearchForm />
+            </section>
+            <section>
+
             </section>
         </div>
     );
