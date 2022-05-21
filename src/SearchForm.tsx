@@ -3,6 +3,7 @@ import {ErrorMessage, Field, Form, Formik, FormikHelpers} from 'formik';
 import * as yup from 'yup';
 import useData from "./useData";
 import _ from 'lodash';
+import qs from 'qs';
 
 interface formValues {
     name: string,
@@ -26,7 +27,7 @@ const SearchForm = () => {
         quality: yup.array().of(yup.string()).ensure()
     });
 
-    const {data, loading, setSearchId} = useData();
+    const {data, loading, setEndpoint, setConfig, message, error} = useData();
 
     return (
         <>
@@ -47,7 +48,11 @@ const SearchForm = () => {
                         actions.setSubmitting(false);
                     }, 1000);
 
-                    setSearchId(15666);
+                    // setEndpoint('/account');
+                    // setConfig({ });
+                    setEndpoint('/items');
+                    setConfig({ params: {ids: [28446, 14556, 99999999]}, paramsSerializer: params => qs.stringify(params, {arrayFormat: 'comma'})});
+                    // setConfig({ params: {page: 0, page_size: 25}});
                 }}>
                 {({isSubmitting}) => <Form>
                     <label htmlFor="name">Item Name</label>
@@ -161,6 +166,8 @@ const SearchForm = () => {
             </Formik>
             <div style={{marginTop: '2rem'}}>
                 {loading && <div>Loading....</div>}
+                <div>{message}</div>
+                <div>{error}</div>
                 {!loading && !_.isEmpty(data) && JSON.stringify(data, null, 2)}
             </div>
         </>
